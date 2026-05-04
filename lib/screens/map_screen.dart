@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as fm;
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:latlong2/latlong.dart' as ll;
@@ -107,6 +110,10 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
   gmaps.BitmapDescriptor? _centerMarkerIcon;
   gmaps.BitmapDescriptor? _selectedCenterMarkerIcon;
   gmaps.BitmapDescriptor? _currentLocationMarkerIcon;
+  final Map<String, gmaps.BitmapDescriptor> _centerPhotoMarkerIcons = {};
+  final Map<String, gmaps.BitmapDescriptor> _selectedCenterPhotoMarkerIcons =
+      {};
+  final Set<String> _loadingCenterPhotoMarkerIds = {};
 
   bool get _useOpenStreetMap {
     if (kIsWeb) return true;
@@ -153,6 +160,150 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
     });
   }
 
+  void _ensureCenterPhotoMarkers(List<EsportCenter> centers) {
+    if (_useOpenStreetMap) return;
+    for (final center in centers) {
+      if (_centerPhotoMarkerIcons.containsKey(center.id) ||
+          _loadingCenterPhotoMarkerIds.contains(center.id)) {
+        continue;
+      }
+      _loadingCenterPhotoMarkerIds.add(center.id);
+      unawaited(_loadCenterPhotoMarker(center));
+    }
+  }
+
+  Future<void> _loadCenterPhotoMarker(EsportCenter center) async {
+    try {
+      final normalIcon = await _createPhotoMarkerDescriptor(
+        imageSource: center.primaryImage,
+        ringColor: const Color(0xFFEA4335),
+        size: 54,
+      );
+      final selectedIcon = await _createPhotoMarkerDescriptor(
+        imageSource: center.primaryImage,
+        ringColor: const Color(0xFF2563EB),
+        size: 62,
+      );
+      if (!mounted) return;
+      setState(() {
+        _centerPhotoMarkerIcons[center.id] = normalIcon;
+        _selectedCenterPhotoMarkerIcons[center.id] = selectedIcon;
+      });
+    } finally {
+      _loadingCenterPhotoMarkerIds.remove(center.id);
+    }
+  }
+
+  Future<gmaps.BitmapDescriptor> _createPhotoMarkerDescriptor({
+    required String? imageSource,
+    required Color ringColor,
+    required double size,
+  }) async {
+    final pixelRatio = math.max(
+      ui.PlatformDispatcher.instance.views.first.devicePixelRatio,
+      2.0,
+    );
+    final scaledSize = size * pixelRatio;
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final center = Offset(scaledSize / 2, scaledSize / 2);
+    final radius = scaledSize / 2;
+    final imageRadius = radius - (5 * pixelRatio);
+
+    final shadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.22)
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 5 * pixelRatio);
+    canvas.drawCircle(
+      center.translate(0, 2 * pixelRatio),
+      radius - 2 * pixelRatio,
+      shadowPaint,
+    );
+    canvas.drawCircle(
+      center,
+      radius - 1 * pixelRatio,
+      Paint()..color = ringColor,
+    );
+    canvas.drawCircle(
+      center,
+      imageRadius + 1.5 * pixelRatio,
+      Paint()..color = Colors.white,
+    );
+
+    final imageBytes = await _loadMarkerImageBytes(imageSource);
+    if (imageBytes != null) {
+      final codec = await ui.instantiateImageCodec(imageBytes);
+      final frame = await codec.getNextFrame();
+      final image = frame.image;
+      final imageRect = Rect.fromCircle(center: center, radius: imageRadius);
+      canvas.save();
+      canvas.clipPath(Path()..addOval(imageRect));
+      canvas.drawImageRect(
+        image,
+        Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+        imageRect,
+        Paint()..filterQuality = FilterQuality.high,
+      );
+      canvas.restore();
+    } else {
+      canvas.drawCircle(center, imageRadius, Paint()..color = ringColor);
+      final iconPainter = TextPainter(textDirection: TextDirection.ltr);
+      iconPainter.text = TextSpan(
+        text: String.fromCharCode(Icons.storefront_rounded.codePoint),
+        style: TextStyle(
+          fontSize: scaledSize * 0.34,
+          color: Colors.white,
+          fontFamily: Icons.storefront_rounded.fontFamily,
+          package: Icons.storefront_rounded.fontPackage,
+        ),
+      );
+      iconPainter.layout();
+      iconPainter.paint(
+        canvas,
+        Offset(
+          center.dx - iconPainter.width / 2,
+          center.dy - iconPainter.height / 2,
+        ),
+      );
+    }
+
+    final image = await recorder.endRecording().toImage(
+      scaledSize.ceil(),
+      scaledSize.ceil(),
+    );
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    return gmaps.BitmapDescriptor.bytes(
+      byteData!.buffer.asUint8List(),
+      imagePixelRatio: pixelRatio,
+    );
+  }
+
+  Future<Uint8List?> _loadMarkerImageBytes(String? imageSource) async {
+    final raw = imageSource?.trim();
+    if (raw == null || raw.isEmpty) return null;
+
+    try {
+      return base64Decode(raw);
+    } catch (_) {}
+
+    try {
+      if (raw.startsWith('http://') || raw.startsWith('https://')) {
+        final data = await NetworkAssetBundle(Uri.parse(raw)).load(raw);
+        return data.buffer.asUint8List();
+      }
+      if (raw.startsWith('gs://')) {
+        return await FirebaseStorage.instance
+            .refFromURL(raw)
+            .getData(1024 * 1024 * 2);
+      }
+      return await FirebaseStorage.instance
+          .ref()
+          .child(raw)
+          .getData(1024 * 1024 * 2);
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<gmaps.BitmapDescriptor> _createCenterMarkerDescriptor({
     required Color fillColor,
     required Color borderColor,
@@ -184,7 +335,10 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
       ..moveTo(center.dx, height - 8)
       ..lineTo(center.dx - circleRadius * 0.78, center.dy + circleRadius * 0.64)
       ..arcToPoint(
-        Offset(center.dx + circleRadius * 0.78, center.dy + circleRadius * 0.64),
+        Offset(
+          center.dx + circleRadius * 0.78,
+          center.dy + circleRadius * 0.64,
+        ),
         radius: Radius.circular(circleRadius * 1.3),
       )
       ..close();
@@ -216,9 +370,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
     );
 
     final image = await recorder.endRecording().toImage(
-          width.ceil(),
-          height.ceil(),
-        );
+      width.ceil(),
+      height.ceil(),
+    );
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     return gmaps.BitmapDescriptor.bytes(
       byteData!.buffer.asUint8List(),
@@ -237,8 +391,8 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
     final canvas = Canvas(recorder);
     final center = Offset(scaledSize / 2, scaledSize / 2);
 
-    final haloPaint =
-        Paint()..color = const Color(0xFF4285F4).withValues(alpha: 0.16);
+    final haloPaint = Paint()
+      ..color = const Color(0xFF4285F4).withValues(alpha: 0.16);
     final ringPaint = Paint()..color = Colors.white;
     final strokePaint = Paint()
       ..color = const Color(0xFF4285F4)
@@ -252,9 +406,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
     canvas.drawCircle(center, 4.8 * pixelRatio, dotPaint);
 
     final image = await recorder.endRecording().toImage(
-          scaledSize.ceil(),
-          scaledSize.ceil(),
-        );
+      scaledSize.ceil(),
+      scaledSize.ceil(),
+    );
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     return gmaps.BitmapDescriptor.bytes(
       byteData!.buffer.asUint8List(),
@@ -271,17 +425,18 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
 
   void _startLocationStream() {
     if (_positionStreamSubscription != null) return;
-    _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
-      ),
-    ).listen((position) {
-      if (!mounted) return;
-      setState(() {
-        _currentPosition = position;
-      });
-    });
+    _positionStreamSubscription =
+        Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 10,
+          ),
+        ).listen((position) {
+          if (!mounted) return;
+          setState(() {
+            _currentPosition = position;
+          });
+        });
   }
 
   Future<void> _loadCurrentLocation({
@@ -373,8 +528,7 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
   }
 
   gmaps.LatLng _offsetTargetAboveBottomOverlay(gmaps.LatLng target) {
-    final latitudeOffset =
-        _bottomOverlayFocusOffsetMeters / 111320;
+    final latitudeOffset = _bottomOverlayFocusOffsetMeters / 111320;
     return gmaps.LatLng(target.latitude - latitudeOffset, target.longitude);
   }
 
@@ -432,7 +586,8 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
             _currentPosition!.longitude,
           ),
           infoWindow: const gmaps.InfoWindow(title: 'You'),
-          icon: _currentLocationMarkerIcon ??
+          icon:
+              _currentLocationMarkerIcon ??
               gmaps.BitmapDescriptor.defaultMarkerWithHue(
                 gmaps.BitmapDescriptor.hueAzure,
               ),
@@ -443,6 +598,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
 
     for (final center in centers) {
       final isSelected = center.id == selectedCenter.id;
+      final photoIcon = isSelected
+          ? _selectedCenterPhotoMarkerIcons[center.id]
+          : _centerPhotoMarkerIcons[center.id];
       markers.add(
         gmaps.Marker(
           markerId: gmaps.MarkerId(center.id),
@@ -458,16 +616,20 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
               );
             },
           ),
-          icon: isSelected
-              ? (_selectedCenterMarkerIcon ??
-                  gmaps.BitmapDescriptor.defaultMarkerWithHue(
-                    gmaps.BitmapDescriptor.hueAzure,
-                  ))
-              : (_centerMarkerIcon ??
-                  gmaps.BitmapDescriptor.defaultMarkerWithHue(
-                    gmaps.BitmapDescriptor.hueRed,
-                  )),
-          anchor: const Offset(0.5, 0.92),
+          icon:
+              photoIcon ??
+              (isSelected
+                  ? (_selectedCenterMarkerIcon ??
+                        gmaps.BitmapDescriptor.defaultMarkerWithHue(
+                          gmaps.BitmapDescriptor.hueAzure,
+                        ))
+                  : (_centerMarkerIcon ??
+                        gmaps.BitmapDescriptor.defaultMarkerWithHue(
+                          gmaps.BitmapDescriptor.hueRed,
+                        ))),
+          anchor: photoIcon == null
+              ? const Offset(0.5, 0.92)
+              : const Offset(0.5, 0.5),
           zIndexInt: isSelected ? 2 : 1,
           onTap: () => _selectCenter(centers, center),
         ),
@@ -636,8 +798,8 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
     final borderColor = isSelected
         ? const Color(0xFF22C55E)
         : (isDark
-            ? Colors.white.withValues(alpha: 0.07)
-            : Colors.black.withValues(alpha: 0.06));
+              ? Colors.white.withValues(alpha: 0.07)
+              : Colors.black.withValues(alpha: 0.06));
     final textPrimary = isDark ? Colors.white : const Color(0xFF0F172A);
     final textSecondary = isDark
         ? Colors.white.withValues(alpha: 0.76)
@@ -668,7 +830,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
               border: Border.all(color: borderColor, width: isSelected ? 2 : 1),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: isSelected ? 0.18 : 0.10),
+                  color: Colors.black.withValues(
+                    alpha: isSelected ? 0.18 : 0.10,
+                  ),
                   blurRadius: isSelected ? 26 : 18,
                   offset: const Offset(0, 12),
                 ),
@@ -715,8 +879,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
                                   _InfoPill(
                                     icon: Icons.star_rounded,
                                     label: center.rating.toStringAsFixed(1),
-                                    backgroundColor: const Color(0xFFF59E0B)
-                                        .withValues(alpha: 0.18),
+                                    backgroundColor: const Color(
+                                      0xFFF59E0B,
+                                    ).withValues(alpha: 0.18),
                                     foregroundColor: const Color(0xFFFACC15),
                                   ),
                                   const Spacer(),
@@ -781,7 +946,10 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
                           Expanded(
                             child: _StatTile(
                               icon: Icons.desktop_windows_rounded,
-                              label: _pcCountShortLabel(context, center.pcCount),
+                              label: _pcCountShortLabel(
+                                context,
+                                center.pcCount,
+                              ),
                               foregroundColor: textPrimary,
                               backgroundColor: isDark
                                   ? Colors.white.withValues(alpha: 0.05)
@@ -797,7 +965,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
                                   ? const Color(0xFF5EEAD4)
                                   : const Color(0xFF0F766E),
                               backgroundColor: isDark
-                                  ? const Color(0xFF0F766E).withValues(alpha: 0.14)
+                                  ? const Color(
+                                      0xFF0F766E,
+                                    ).withValues(alpha: 0.14)
                                   : const Color(0xFFCCFBF1),
                             ),
                           ),
@@ -811,7 +981,8 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CenterDetail(center: center),
+                                builder: (context) =>
+                                    CenterDetail(center: center),
                               ),
                             );
                           },
@@ -888,7 +1059,8 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
       ),
       children: [
         fm.TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          urlTemplate: 'https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+          subdomains: const ['0', '1', '2', '3'],
           userAgentPackageName: 'pc_app',
         ),
         if (location != null)
@@ -922,6 +1094,7 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
       valueListenable: CenterStore.centersNotifier,
       builder: (context, centers, _) {
         final orderedCenters = _sortCentersByDistance(centers);
+        _ensureCenterPhotoMarkers(orderedCenters);
 
         if (orderedCenters.isEmpty) {
           return Scaffold(
@@ -939,9 +1112,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
         }
 
         final selectedCenter = orderedCenters.cast<EsportCenter?>().firstWhere(
-              (center) => center?.id == _selectedCenterId,
-              orElse: () => orderedCenters.first,
-            )!;
+          (center) => center?.id == _selectedCenterId,
+          orElse: () => orderedCenters.first,
+        )!;
 
         return Scaffold(
           appBar: AppBar(
@@ -1008,7 +1181,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: Theme.of(context).brightness == Brightness.dark
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
                                   ? Colors.white
                                   : const Color(0xFF0F172A),
                             ),
@@ -1020,7 +1195,9 @@ class _CenterMapScreenState extends State<CenterMapScreen> {
                               vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF22C55E).withValues(alpha: 0.16),
+                              color: const Color(
+                                0xFF22C55E,
+                              ).withValues(alpha: 0.16),
                               borderRadius: BorderRadius.circular(999),
                             ),
                             child: Text(
@@ -1164,8 +1341,9 @@ class _WebCenterMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ringColor =
-        isSelected ? const Color(0xFF2563EB) : const Color(0xFFEA4335);
+    final ringColor = isSelected
+        ? const Color(0xFF2563EB)
+        : const Color(0xFFEA4335);
     return Tooltip(
       message: label,
       child: Container(
