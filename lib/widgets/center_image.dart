@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CenterImage extends StatefulWidget {
@@ -81,16 +82,18 @@ class _CenterImageState extends State<CenterImage> {
     });
 
     try {
-      final resolvedBytes = await _resolveStorageBytes(raw);
-      if (!mounted || requestToken != _requestToken) return;
-      if (resolvedBytes != null) {
-        setState(() {
-          _memoryBytes = resolvedBytes;
-          _networkUrl = null;
-          _isLoading = false;
-          _hasError = false;
-        });
-        return;
+      if (!kIsWeb) {
+        final resolvedBytes = await _resolveStorageBytes(raw);
+        if (!mounted || requestToken != _requestToken) return;
+        if (resolvedBytes != null) {
+          setState(() {
+            _memoryBytes = resolvedBytes;
+            _networkUrl = null;
+            _isLoading = false;
+            _hasError = false;
+          });
+          return;
+        }
       }
 
       final resolved = await _resolveStorageUrl(raw);
@@ -120,30 +123,36 @@ class _CenterImageState extends State<CenterImage> {
       }
       for (final candidate in _candidateStoragePaths(storagePath)) {
         try {
-          return await FirebaseStorage.instance.ref().child(candidate).getDownloadURL();
+          return await FirebaseStorage.instance
+              .ref()
+              .child(candidate)
+              .getDownloadURL();
         } on FirebaseException {
           continue;
         }
       }
-      return raw;
+      return _publicStorageUrl(storagePath) ?? raw;
     }
 
     if (raw.startsWith('gs://')) {
       try {
         return await FirebaseStorage.instance.refFromURL(raw).getDownloadURL();
       } on FirebaseException {
-        return null;
+        return _publicStorageUrl(raw);
       }
     }
 
     for (final candidate in _candidateStoragePaths(raw)) {
       try {
-        return await FirebaseStorage.instance.ref().child(candidate).getDownloadURL();
+        return await FirebaseStorage.instance
+            .ref()
+            .child(candidate)
+            .getDownloadURL();
       } on FirebaseException {
         continue;
       }
     }
-    return null;
+    return _publicStorageUrl(raw);
   }
 
   Future<Uint8List?> _resolveStorageBytes(String raw) async {
@@ -154,7 +163,10 @@ class _CenterImageState extends State<CenterImage> {
       }
       for (final candidate in _candidateStoragePaths(storagePath)) {
         try {
-          return await FirebaseStorage.instance.ref().child(candidate).getData();
+          return await FirebaseStorage.instance
+              .ref()
+              .child(candidate)
+              .getData();
         } on FirebaseException {
           continue;
         }
@@ -206,6 +218,26 @@ class _CenterImageState extends State<CenterImage> {
     return Uri.decodeComponent(segments[objectIndex + 1]);
   }
 
+  String? _publicStorageUrl(String raw) {
+    final storagePath = _extractFirebaseStoragePath(raw) ?? raw.trim();
+    if (storagePath.isEmpty) return null;
+
+    var bucket = Firebase.app().options.storageBucket;
+    if (raw.startsWith('gs://')) {
+      final uri = Uri.tryParse(raw);
+      if (uri != null && uri.host.isNotEmpty) {
+        bucket = uri.host;
+      }
+    }
+    if (bucket == null || bucket.isEmpty) return null;
+
+    return Uri.https(
+      'firebasestorage.googleapis.com',
+      '/v0/b/$bucket/o/${Uri.encodeComponent(storagePath)}',
+      const <String, String>{'alt': 'media'},
+    ).toString();
+  }
+
   Iterable<String> _candidateStoragePaths(String rawPath) sync* {
     final normalized = rawPath.trim();
     if (normalized.isEmpty) {
@@ -214,10 +246,14 @@ class _CenterImageState extends State<CenterImage> {
 
     final dotIndex = normalized.lastIndexOf('.');
     final hasExtension =
-        dotIndex > normalized.lastIndexOf('/') && dotIndex != normalized.length - 1;
-    final basePath = hasExtension ? normalized.substring(0, dotIndex) : normalized;
-    final currentExtension =
-        hasExtension ? normalized.substring(dotIndex + 1).toLowerCase() : null;
+        dotIndex > normalized.lastIndexOf('/') &&
+        dotIndex != normalized.length - 1;
+    final basePath = hasExtension
+        ? normalized.substring(0, dotIndex)
+        : normalized;
+    final currentExtension = hasExtension
+        ? normalized.substring(dotIndex + 1).toLowerCase()
+        : null;
     final candidates = <String>[
       if (hasExtension) normalized,
       if (currentExtension != 'png') '$basePath.png',
@@ -305,7 +341,10 @@ class _CenterImageState extends State<CenterImage> {
                 borderRadius: BorderRadius.circular(widget.borderRadius),
                 color: const Color(0xFF172033),
               ),
-              child: const Icon(Icons.broken_image_outlined, color: Colors.white70),
+              child: const Icon(
+                Icons.broken_image_outlined,
+                color: Colors.white70,
+              ),
             );
           },
         ),
