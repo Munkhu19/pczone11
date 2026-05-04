@@ -11,10 +11,7 @@ import 'centers.dart';
 import 'firebase_state.dart';
 
 class CenterCloudSyncException implements Exception {
-  const CenterCloudSyncException(
-    this.message, {
-    this.savedLocally = false,
-  });
+  const CenterCloudSyncException(this.message, {this.savedLocally = false});
 
   final String message;
   final bool savedLocally;
@@ -38,7 +35,7 @@ class CenterStore {
   static bool _initialized = false;
   static final Set<String> _dirtyCenterIds = <String>{};
   static StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
-      _cloudSubscription;
+  _cloudSubscription;
 
   static Future<void> initialize() async {
     if (_initialized) return;
@@ -57,10 +54,7 @@ class CenterStore {
   static Future<void> _initializeCloud(List<EsportCenter> localCenters) async {
     try {
       final remoteCenters = await _loadRemoteCenters();
-      final merged = _mergeCenters(
-        localCenters: localCenters,
-        remoteCenters: remoteCenters,
-      );
+      final merged = remoteCenters.isEmpty ? localCenters : remoteCenters;
 
       await _persistLocalWithFallback(merged);
       centersNotifier.value = List<EsportCenter>.unmodifiable(merged);
@@ -83,7 +77,8 @@ class CenterStore {
     if (normalizedOwnerEmail == null) return const <EsportCenter>[];
     return centersNotifier.value
         .where(
-          (center) => _normalizeOwnerEmail(center.ownerEmail) == normalizedOwnerEmail,
+          (center) =>
+              _normalizeOwnerEmail(center.ownerEmail) == normalizedOwnerEmail,
         )
         .toList(growable: false);
   }
@@ -143,7 +138,9 @@ class CenterStore {
   static Future<void> deleteCenter(String centerId) async {
     final previous = List<EsportCenter>.from(centersNotifier.value);
     final wasDirty = _dirtyCenterIds.contains(centerId);
-    final removed = previous.where((item) => item.id == centerId).toList(growable: false);
+    final removed = previous
+        .where((item) => item.id == centerId)
+        .toList(growable: false);
     final next = previous
         .where((item) => item.id != centerId)
         .toList(growable: false);
@@ -168,9 +165,7 @@ class CenterStore {
   static Future<void> deleteCenters(Set<String> centerIds) async {
     if (centerIds.isEmpty) return;
     final previous = List<EsportCenter>.from(centersNotifier.value);
-    final dirtyBeforeDelete = centerIds
-        .where(_dirtyCenterIds.contains)
-        .toSet();
+    final dirtyBeforeDelete = centerIds.where(_dirtyCenterIds.contains).toSet();
     final removed = previous
         .where((item) => centerIds.contains(item.id))
         .toList(growable: false);
@@ -235,11 +230,15 @@ class CenterStore {
   }
 
   static Future<List<EsportCenter>> _loadRemoteCenters() async {
-    final snapshot = await _collection.get().timeout(const Duration(seconds: 8));
+    final snapshot = await _collection.get().timeout(
+      const Duration(seconds: 8),
+    );
     final loaded = snapshot.docs
         .map((doc) {
           final data = Map<String, dynamic>.from(doc.data());
-          data['id'] = data['id']?.toString().isNotEmpty == true ? data['id'] : doc.id;
+          data['id'] = data['id']?.toString().isNotEmpty == true
+              ? data['id']
+              : doc.id;
           return EsportCenter.fromMap(data);
         })
         .where((center) => center.id.isNotEmpty)
@@ -254,20 +253,17 @@ class CenterStore {
         snapshot.docs
             .map((doc) {
               final data = Map<String, dynamic>.from(doc.data());
-              data['id'] =
-                  data['id']?.toString().isNotEmpty == true ? data['id'] : doc.id;
+              data['id'] = data['id']?.toString().isNotEmpty == true
+                  ? data['id']
+                  : doc.id;
               return EsportCenter.fromMap(data);
             })
             .toList(growable: false),
       );
 
       if (remoteCenters.isEmpty) return;
-      final merged = _mergeCenters(
-        localCenters: centersNotifier.value,
-        remoteCenters: remoteCenters,
-      );
-      await _persistLocalWithFallback(merged);
-      centersNotifier.value = List<EsportCenter>.unmodifiable(merged);
+      await _persistLocalWithFallback(remoteCenters);
+      centersNotifier.value = List<EsportCenter>.unmodifiable(remoteCenters);
     });
   }
 
@@ -281,14 +277,11 @@ class CenterStore {
 
   static Future<void> _loadDirtyCenterIds() async {
     final prefs = await SharedPreferences.getInstance();
-    final dirtyIds = prefs.getStringList(_dirtyCenterIdsKey) ?? const <String>[];
+    final dirtyIds =
+        prefs.getStringList(_dirtyCenterIdsKey) ?? const <String>[];
     _dirtyCenterIds
       ..clear()
-      ..addAll(
-        dirtyIds
-            .map((id) => id.trim())
-            .where((id) => id.isNotEmpty),
-      );
+      ..addAll(dirtyIds.map((id) => id.trim()).where((id) => id.isNotEmpty));
   }
 
   static Future<void> _persistDirtyCenterIds() async {
@@ -327,7 +320,9 @@ class CenterStore {
     }
   }
 
-  static Future<void> _pruneDirtyCenterIds(Iterable<String> validCenterIds) async {
+  static Future<void> _pruneDirtyCenterIds(
+    Iterable<String> validCenterIds,
+  ) async {
     final validIds = validCenterIds
         .map((id) => id.trim())
         .where((id) => id.isNotEmpty)
@@ -345,7 +340,9 @@ class CenterStore {
     centersNotifier.value = List<EsportCenter>.unmodifiable(sanitized);
   }
 
-  static Future<void> _persistLocalWithFallback(List<EsportCenter> centers) async {
+  static Future<void> _persistLocalWithFallback(
+    List<EsportCenter> centers,
+  ) async {
     try {
       await _persistLocal(centers);
       return;
@@ -355,11 +352,7 @@ class CenterStore {
     }
 
     final withoutGallery = centers
-        .map(
-          (center) => center.copyWith(
-            imagesBase64: const <String>[],
-          ),
-        )
+        .map((center) => center.copyWith(imagesBase64: const <String>[]))
         .toList(growable: false);
     try {
       await _persistLocal(withoutGallery);
@@ -440,36 +433,6 @@ class CenterStore {
     }
   }
 
-  static List<EsportCenter> _mergeCenters({
-    required List<EsportCenter> localCenters,
-    required List<EsportCenter> remoteCenters,
-  }) {
-    final merged = <String, EsportCenter>{
-      for (final center in remoteCenters) center.id: center,
-    };
-
-    for (final center in localCenters) {
-      final existing = merged[center.id];
-      merged[center.id] = existing == null
-          ? center
-          : _preferLocalIfLikelyUserData(local: center, remote: existing);
-    }
-
-    return merged.values.toList(growable: false)
-      ..sort((a, b) => a.name.compareTo(b.name));
-  }
-
-  static EsportCenter _preferLocalIfLikelyUserData({
-    required EsportCenter local,
-    required EsportCenter remote,
-  }) {
-    return _mergeLocalAndRemote(
-      local: local,
-      remote: remote,
-      localDirty: _dirtyCenterIds.contains(local.id),
-    );
-  }
-
   @visibleForTesting
   static EsportCenter mergeCentersForTesting({
     required EsportCenter local,
@@ -488,7 +451,8 @@ class CenterStore {
     required EsportCenter remote,
     required bool localDirty,
   }) {
-    final localLooksCustom = local.ownerEmail != null && local.ownerEmail!.isNotEmpty;
+    final localLooksCustom =
+        local.ownerEmail != null && local.ownerEmail!.isNotEmpty;
     final remoteLooksSeed = seedCenters.any((seed) => seed.id == remote.id);
     if (localDirty || (localLooksCustom && remoteLooksSeed)) {
       return local;
@@ -496,7 +460,9 @@ class CenterStore {
 
     return remote.copyWith(
       profileImageBase64: _mergedProfileImage(local: local, remote: remote),
-      imagesBase64: remote.imagesBase64.isNotEmpty ? remote.imagesBase64 : local.imagesBase64,
+      imagesBase64: remote.imagesBase64.isNotEmpty
+          ? remote.imagesBase64
+          : local.imagesBase64,
     );
   }
 
@@ -590,9 +556,9 @@ class CenterStore {
 
   static EsportCenter _mergeSeedMetadataIfNeeded(EsportCenter center) {
     final seed = seedCenters.cast<EsportCenter?>().firstWhere(
-          (item) => item?.id == center.id,
-          orElse: () => null,
-        );
+      (item) => item?.id == center.id,
+      orElse: () => null,
+    );
     if (seed == null) return center;
 
     final hasDefaultRating = center.rating == 4.7;
@@ -606,9 +572,12 @@ class CenterStore {
 
     return center.copyWith(
       rating: hasDefaultRating ? seed.rating : center.rating,
-      reviewCount: hasDefaultReviewCount ? seed.reviewCount : center.reviewCount,
-      reviewSnippet:
-          hasDefaultSnippet ? seed.reviewSnippet : center.reviewSnippet,
+      reviewCount: hasDefaultReviewCount
+          ? seed.reviewCount
+          : center.reviewCount,
+      reviewSnippet: hasDefaultSnippet
+          ? seed.reviewSnippet
+          : center.reviewSnippet,
     );
   }
 

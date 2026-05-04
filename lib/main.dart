@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -211,8 +213,43 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  StreamSubscription<User?>? _authSubscription;
+  User? _user;
+  bool _isWaitingForAuth = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!firebaseAvailable) {
+      _isWaitingForAuth = false;
+      return;
+    }
+    _user = FirebaseAuth.instance.currentUser;
+    _isWaitingForAuth = false;
+    _authSubscription = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (!mounted) return;
+      final currentUid = _user?.uid;
+      final nextUid = user?.uid;
+      if (currentUid == nextUid) return;
+      setState(() {
+        _user = user;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -223,29 +260,17 @@ class AuthGate extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: authFlowInProgress,
       builder: (context, isAuthFlowInProgress, _) {
-        return StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
-            if (isAuthFlowInProgress) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
-            if (snapshot.data != null) {
-              final user = snapshot.data!;
-              return ValueListenableBuilder<int>(
-                valueListenable: RoleStore.rolesRevision,
-                builder: (context, revision, _) =>
-                    RoleGate(email: user.email, revision: revision),
-              );
-            }
-            return const LoginScreen();
-          },
+        if (_isWaitingForAuth || isAuthFlowInProgress) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final user = _user;
+        if (user == null) return const LoginScreen();
+        return ValueListenableBuilder<int>(
+          valueListenable: RoleStore.rolesRevision,
+          builder: (context, revision, _) =>
+              RoleGate(email: user.email, revision: revision),
         );
       },
     );

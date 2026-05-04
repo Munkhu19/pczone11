@@ -16,8 +16,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
-{
+class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -90,7 +89,9 @@ class _LoginScreenState extends State<LoginScreen>
 
   void _showError(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showSuccess(String message) {
@@ -129,7 +130,9 @@ class _LoginScreenState extends State<LoginScreen>
     }
     if (_isSignUp &&
         _requestOwnerAccessOnSignUp &&
-        (ownerCenterName.isEmpty || ownerPhone.isEmpty || ownerAddress.isEmpty)) {
+        (ownerCenterName.isEmpty ||
+            ownerPhone.isEmpty ||
+            ownerAddress.isEmpty)) {
       _showError(l10n.ownerApplicationRequiredFields);
       return;
     }
@@ -210,6 +213,38 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
+  Future<void> _sendPasswordReset() async {
+    final l10n = AppLocalizations.of(context)!;
+    if (!firebaseAvailable) {
+      _showError(l10n.authFirebaseNotInitialized);
+      return;
+    }
+
+    final email = emailController.text.trim().toLowerCase();
+    if (email.isEmpty) {
+      _showError(l10n.authInvalidEmail);
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      _showSuccess(l10n.profilePasswordResetSent(email));
+    } on FirebaseAuthException catch (e) {
+      _showError(_authErrorMessage(l10n, e.code));
+    } catch (_) {
+      _showError(l10n.authUnknownError);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   InputDecoration _inputDecoration({
     required String label,
     required IconData icon,
@@ -254,11 +289,11 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   TextStyle _fieldTextStyle(BuildContext context) => TextStyle(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : const Color(0xFF0F172A),
-        fontSize: 16,
-      );
+    color: Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : const Color(0xFF0F172A),
+    fontSize: 16,
+  );
 
   Widget _buildField({
     required TextEditingController controller,
@@ -277,7 +312,9 @@ class _LoginScreenState extends State<LoginScreen>
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: maxLines,
-      textInputAction: nextFocus != null ? TextInputAction.next : TextInputAction.done,
+      textInputAction: nextFocus != null
+          ? TextInputAction.next
+          : TextInputAction.done,
       onSubmitted: (_) {
         if (nextFocus != null) {
           FocusScope.of(context).requestFocus(nextFocus);
@@ -433,20 +470,24 @@ class _LoginScreenState extends State<LoginScreen>
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: isDark
-                                    ? const Color(0xFF081120).withValues(alpha: 0.66)
+                                    ? const Color(
+                                        0xFF081120,
+                                      ).withValues(alpha: 0.66)
                                     : Colors.white.withValues(alpha: 0.92),
                                 border: Border.all(
-                                  color: (isDark
-                                          ? const Color(0xFF67E8F9)
-                                          : const Color(0xFF14B8A6))
-                                      .withValues(alpha: 0.55),
+                                  color:
+                                      (isDark
+                                              ? const Color(0xFF67E8F9)
+                                              : const Color(0xFF14B8A6))
+                                          .withValues(alpha: 0.55),
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: (isDark
-                                            ? const Color(0xFF67E8F9)
-                                            : const Color(0xFF14B8A6))
-                                        .withValues(alpha: 0.16),
+                                    color:
+                                        (isDark
+                                                ? const Color(0xFF67E8F9)
+                                                : const Color(0xFF14B8A6))
+                                            .withValues(alpha: 0.16),
                                     blurRadius: 20,
                                     spreadRadius: 2,
                                   ),
@@ -466,17 +507,18 @@ class _LoginScreenState extends State<LoginScreen>
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w800,
-                                color:
-                                    isDark ? Colors.white : const Color(0xFF0F172A),
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF0F172A),
                                 letterSpacing: -0.4,
                                 shadows: isDark
                                     ? const [
-                                  Shadow(
-                                    color: Color(0xCC020617),
-                                    blurRadius: 14,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ]
+                                        Shadow(
+                                          color: Color(0xCC020617),
+                                          blurRadius: 14,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ]
                                     : null,
                               ),
                             ),
@@ -495,7 +537,9 @@ class _LoginScreenState extends State<LoginScreen>
                               label: l10n.password,
                               icon: Icons.key_outlined,
                               focusNode: _passwordFocusNode,
-                              nextFocus: _isSignUp ? _confirmPasswordFocusNode : null,
+                              nextFocus: _isSignUp
+                                  ? _confirmPasswordFocusNode
+                                  : null,
                               obscureText: true,
                               onDone: _submitAuth,
                             ),
@@ -526,7 +570,9 @@ class _LoginScreenState extends State<LoginScreen>
                                       : const Color(0xFF14B8A6),
                                   foregroundColor: Colors.white,
                                   elevation: 0,
-                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 15,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(14),
                                   ),
@@ -553,6 +599,23 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                             ),
                             const SizedBox(height: 10),
+                            if (!_isSignUp) ...[
+                              TextButton(
+                                onPressed: _isLoading
+                                    ? null
+                                    : _sendPasswordReset,
+                                child: Text(
+                                  l10n.profileChangePassword,
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? const Color(0xFF67E8F9)
+                                        : const Color(0xFF0F766E),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                            ],
                             TextButton(
                               onPressed: _isLoading
                                   ? null
@@ -575,12 +638,12 @@ class _LoginScreenState extends State<LoginScreen>
                                   fontWeight: FontWeight.w700,
                                   shadows: isDark
                                       ? const [
-                                    Shadow(
-                                      color: Color(0xCC020617),
-                                      blurRadius: 12,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ]
+                                          Shadow(
+                                            color: Color(0xCC020617),
+                                            blurRadius: 12,
+                                            offset: Offset(0, 3),
+                                          ),
+                                        ]
                                       : null,
                                 ),
                               ),
@@ -603,8 +666,6 @@ class _LoginScreenState extends State<LoginScreen>
       ],
     );
 
-    return Scaffold(
-      body: content,
-    );
+    return Scaffold(body: content);
   }
 }

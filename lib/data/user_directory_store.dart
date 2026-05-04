@@ -83,16 +83,19 @@ class UserDirectoryStore {
   }
 
   static Future<Set<String>> all() async {
-    final cached = Set<String>.from(await _users());
     if (!firebaseAvailable ||
         !RoleStore.isAdminEmail(FirebaseAuth.instance.currentUser?.email)) {
-      return cached;
+      return Set<String>.from(await _users());
     }
 
     try {
-      final snapshot = await _collection.get().timeout(const Duration(seconds: 8));
+      final snapshot = await _collection.get().timeout(
+        const Duration(seconds: 8),
+      );
       final users = snapshot.docs
-          .map((doc) => _normalizeEmail(doc.data()['email']?.toString() ?? doc.id))
+          .map(
+            (doc) => _normalizeEmail(doc.data()['email']?.toString() ?? doc.id),
+          )
           .whereType<String>()
           .toSet();
       await _persist(users);
@@ -105,7 +108,7 @@ class UserDirectoryStore {
       debugPrint('UserDirectoryStore.all failed: $error');
     }
 
-    return cached;
+    return Set<String>.from(await _users());
   }
 
   static CollectionReference<Map<String, dynamic>> get _collection =>
