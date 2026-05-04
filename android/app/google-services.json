@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "175694151955",
+    "project_id": "esport-center-46cde",
+    "storage_bucket": "esport-center-46cde.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175694151955:android:ae7329ed78eb7ae63adae6",
+        "android_client_info": {
+          "package_name": "com.esport"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8WgK0hmwSZWiJPO4UvRnJSlj-xqNN6ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175694151955:android:09837977656f05413adae6",
+        "android_client_info": {
+          "package_name": "com.example.pc_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8WgK0hmwSZWiJPO4UvRnJSlj-xqNN6ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userEmail() {
+      return request.auth.token.email;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        userEmail() != null &&
+        userEmail() in [
+          'batsaikhanbatmunkh88@gmail.com',
+        ];
+    }
+
+    function isOwnEmail(email) {
+      return isSignedIn() &&
+        userEmail() != null &&
+        email is string &&
+        email == userEmail();
+    }
+
+    function isCenterOwnerData(data) {
+      return isSignedIn() &&
+        userEmail() != null &&
+        data.ownerEmail is string &&
+        data.ownerEmail == userEmail();
+    }
+
+    function isExistingCenterOwner() {
+      return isCenterOwnerData(resource.data);
+    }
+
+    function isCenterOwnerById(centerId) {
+      return isSignedIn() &&
+        userEmail() != null &&
+        centerId is string &&
+        exists(/databases/$(database)/documents/centers/$(centerId)) &&
+        get(/databases/$(database)/documents/centers/$(centerId)).data.ownerEmail == userEmail();
+    }
+
+    match /centers/{centerId} {
+      allow read: if true;
+      allow create: if isAdmin() || isCenterOwnerData(request.resource.data);
+      allow update: if isAdmin() ||
+        isExistingCenterOwner() ||
+        isCenterOwnerData(request.resource.data);
+      allow delete: if isAdmin() || isExistingCenterOwner();
+    }
+
+    match /user_roles/{email} {
+      allow read: if isAdmin() || isOwnEmail(email);
+      allow create, update: if isAdmin() || (
+        isOwnEmail(email) &&
+        request.resource.data.email is string &&
+        request.resource.data.email == userEmail() &&
+        request.resource.data.role in ['customer', 'owner_pending']
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /owner_applications/{email} {
+      allow read: if isAdmin() || isOwnEmail(email);
+      allow create, update: if isAdmin() || (
+        isOwnEmail(email) &&
+        request.resource.data.email is string &&
+        request.resource.data.email == userEmail()
+      );
+      allow delete: if isAdmin() || isOwnEmail(email);
+    }
+
+    match /user_directory/{email} {
+      allow read: if isAdmin() || isOwnEmail(email);
+      allow create, update: if isAdmin() || (
+        isOwnEmail(email) &&
+        request.resource.data.email is string &&
+        request.resource.data.email == userEmail()
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() &&
+        request.resource.data.createdByUid is string &&
+        request.resource.data.createdByUid == request.auth.uid &&
+        request.resource.data.createdByEmail is string &&
+        request.resource.data.createdByEmail == userEmail();
+      allow update, delete: if isAdmin() || (
+        isSignedIn() && (
+          (resource.data.createdByUid is string &&
+            resource.data.createdByUid == request.auth.uid) ||
+          isCenterOwnerById(resource.data.centerId)
+        )
+      );
+    }
+
+    match /center_blocked_seats/{centerId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin() || isCenterOwnerById(centerId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

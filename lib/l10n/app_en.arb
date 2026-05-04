@@ -1,0 +1,380 @@
+{
+  "@@locale": "en",
+  "appTitle": "E-Sport Center",
+  "changeLanguage": "Change language",
+  "loginTitle": "E-SPORT CENTER",
+  "username": "Username",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "signIn": "Sign in",
+  "signUp": "Sign up",
+  "switchToSignUp": "Don't have an account? Sign up",
+  "switchToSignIn": "Already have an account? Sign in",
+  "ownerSignUpOption": "Register with owner request",
+  "ownerSignUpHint": "This does not create an owner account immediately. Your account will be created as pending until admin approval.",
+  "accountCreated": "Account created successfully.",
+  "usernameAlreadyExists": "This email is already in use.",
+  "passwordsDoNotMatch": "Passwords do not match.",
+  "authInvalidEmail": "Invalid email address.",
+  "authEmailPasswordNotEnabled": "Email/Password sign-in is disabled in Firebase.",
+  "authUserDisabled": "This account has been disabled.",
+  "authTooManyRequests": "Too many attempts. Try again later.",
+  "authApiKeyInvalid": "Firebase API key is invalid for this app.",
+  "authFirebaseNotInitialized": "Firebase is not initialized correctly.",
+  "authWeakPassword": "Password is too weak.",
+  "authNetworkError": "Network error. Please check your internet.",
+  "authUnknownError": "Authentication failed. Please try again.",
+  "login": "Login",
+  "invalidCredentials": "Invalid username or password",
+  "centersTitle": "E-SPORT CENTERS",
+  "homeTab": "Home",
+  "searchCenterHint": "Search center...",
+  "noCentersFound": "No centers found",
+  "mapTitle": "Center Map",
+  "mapTab": "Map",
+  "bookingHistoryTitle": "Booking History",
+  "addressLabel": "Address: {address}",
+  "@addressLabel": {
+    "placeholders": {
+      "address": {}
+    }
+  },
+  "pcCountLabel": "PC count: {count}",
+  "@pcCountLabel": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "pcSpecLabel": "PC spec: {spec}",
+  "@pcSpecLabel": {
+    "placeholders": {
+      "spec": {}
+    }
+  },
+  "pricePerHourLabel": "Price: {price}₮ / hour",
+  "@pricePerHourLabel": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "phoneLabel": "Phone: {phone}",
+  "@phoneLabel": {
+    "placeholders": {
+      "phone": {}
+    }
+  },
+  "selectPcSeats": "Select PC Seats",
+  "makeBooking": "Make Booking",
+  "selectSeatsTitle": "Select Seats - {center}",
+  "@selectSeatsTitle": {
+    "placeholders": {
+      "center": {}
+    }
+  },
+  "bookingTitle": "Booking",
+  "fillAllFields": "Please fill all fields.",
+  "selectAtLeastOneSeat": "Please select at least one PC seat.",
+  "invalidPlayDuration": "Play duration must be a positive number.",
+  "bookingConfirmed": "Booking Confirmed",
+  "bookingSummary": "{center}\\nSeats: {seats}\\nTime: {time}",
+  "@bookingSummary": {
+    "placeholders": {
+      "center": {},
+      "seats": {},
+      "time": {}
+    }
+  },
+  "ok": "OK",
+  "noneSelected": "None",
+  "centerLabel": "Center: {center}",
+  "@centerLabel": {
+    "placeholders": {
+      "center": {}
+    }
+  },
+  "selectedSeatsLabel": "Selected seats: {seats}",
+  "@selectedSeatsLabel": {
+    "placeholders": {
+      "seats": {}
+    }
+  },
+  "bookingStartTime": "Start time",
+  "bookingTimeLabel": "Time: {time}",
+  "@bookingTimeLabel": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "name": "Name",
+  "phone": "Phone",
+  "phoneMustBe8Digits": "Phone number must be exactly 8 digits.",
+  "playDurationHours": "Play duration (hours)",
+  "invalidStartTime": "Start time must be in the future.",
+  "confirmBooking": "Confirm Booking",
+  "totalPriceLabel": "Total: {price}₮",
+  "@totalPriceLabel": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "bookingReceipt": "{center}\\nSeats: {seats}\\nHours: {hours}\\nPrice/hour: {pricePerHour}₮\\nTotal: {totalPrice}₮",
+  "@bookingReceipt": {
+    "placeholders": {
+      "center": {},
+      "seats": {},
+      "hours": {},
+      "pricePerHour": {},
+      "totalPrice": {}
+    }
+  },
+  "cancelBookingTitle": "Cancel Booking",
+  "cancelBookingQuestion": "Cancel booking for {center}?",
+  "@cancelBookingQuestion": {
+    "placeholders": {
+      "center": {}
+    }
+  },
+  "no": "No",
+  "yesCancel": "Yes, cancel",
+  "bookingCanceled": "Booking canceled.",
+  "bookingAlreadyCanceled": "Booking already canceled.",
+  "clearCanceledBookingsTitle": "Clear canceled bookings",
+  "clearCanceledBookingsMessage": "Remove all canceled bookings from your history?",
+  "clearCanceledBookingsAction": "Clear canceled",
+  "canceledBookingsCleared": "Canceled bookings cleared.",
+  "noBookingHistory": "No booking history yet.",
+  "statusCanceled": "Canceled",
+  "statusActive": "Active",
+  "customerLabel": "Customer: {name}",
+  "@customerLabel": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "durationLabel": "Duration: {hours} hour(s)",
+  "@durationLabel": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "seatsLabel": "Seats: {seats}",
+  "@seatsLabel": {
+    "placeholders": {
+      "seats": {}
+    }
+  },
+  "createdLabel": "Created: {date}",
+  "@createdLabel": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "canceledLabel": "Canceled: {date}",
+  "@canceledLabel": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "cancelBookingAction": "Cancel Booking",
+  "profileTitle": "Profile",
+  "profileNotSignedIn": "Not signed in",
+  "profileNoDisplayName": "No display name",
+  "profileUidLabel": "UID: {uid}",
+  "@profileUidLabel": {
+    "placeholders": {
+      "uid": {}
+    }
+  },
+  "profileDisplayNameLabel": "Display name",
+  "profileSaveButton": "Save profile",
+  "profileAvatarUpload": "Upload avatar",
+  "profileAvatarUpdated": "Avatar updated",
+  "profileAvatarUpdateFailed": "Failed to upload avatar",
+  "profileUpdated": "Profile updated",
+  "profileUpdateFailed": "Failed to update profile",
+  "profileAccountSection": "Account",
+  "profileEditSection": "Edit profile",
+  "profileActivitySection": "Account activity",
+  "profileSettingsTitle": "Profile settings",
+  "profileRoleLabel": "Role",
+  "profileUidTitle": "UID",
+  "profileCreatedAtLabel": "Created at",
+  "profileLastSignInTitle": "Last sign-in",
+  "profileCopyAction": "Copy",
+  "profileEmailCopied": "Email copied",
+  "profileUidCopied": "UID copied",
+  "profileChangePassword": "Change password",
+  "profilePasswordResetSent": "Password reset email sent to {email}",
+  "@profilePasswordResetSent": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "profileEmailVerificationTitle": "Email verification",
+  "profileEmailVerified": "Verified",
+  "profileEmailNotVerified": "Not verified",
+  "profileSendVerification": "Send verification",
+  "profileRefreshVerification": "Refresh",
+  "profileVerificationSent": "Verification email sent to {email}",
+  "@profileVerificationSent": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "logout": "Log out",
+  "profileLastSignInLabel": "Last sign-in: {date}",
+  "@profileLastSignInLabel": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "ownerRoleCustomer": "Customer",
+  "adminRoleLabel": "Admin",
+  "ownerRolePending": "Owner pending",
+  "ownerRoleOwner": "Owner",
+  "ownerApplyTitle": "Apply as owner",
+  "ownerApplyMessage": "Send a request to become an owner? Until approval, you will not have owner access.",
+  "ownerApplyAction": "Apply as owner",
+  "ownerApplySubmitted": "Owner request submitted. Please wait for approval.",
+  "ownerApplicationFormTitle": "Owner application",
+  "ownerApplicationFormSubtitle": "Submit your center details for admin review.",
+  "ownerApplicationCenterName": "Center name",
+  "ownerApplicationPhone": "Contact phone",
+  "ownerApplicationAddress": "Center address",
+  "ownerApplicationLink": "Facebook page or Google Maps link",
+  "ownerApplicationNote": "Additional note",
+  "ownerApplicationSubmit": "Submit owner request",
+  "ownerApplicationRequiredFields": "Please fill center name, phone, and address.",
+  "ownerPendingTitle": "Owner request pending",
+  "ownerPendingHeading": "Your owner request is under review",
+  "ownerPendingMessage": "We received your request. You will get owner access after approval.",
+  "ownerPendingInline": "Your owner request has been submitted and is waiting for approval.",
+  "adminDashboardTitle": "Admin Dashboard",
+  "adminCentersTitle": "All Centers",
+  "adminUsersTitle": "Users",
+  "adminUsersEmpty": "No users found.",
+  "adminPendingRequests": "Pending requests",
+  "adminOwnersCount": "Owners",
+  "adminCustomersCount": "Customers",
+  "adminAdminsCount": "Admins",
+  "adminCentersCount": "Centers",
+  "adminBookingsCount": "Bookings",
+  "adminRevenueTotal": "Revenue",
+  "ownerRequestsTitle": "Owner requests",
+  "ownerRequestsEmpty": "No pending owner requests.",
+  "ownerApproveAction": "Approve",
+  "ownerRejectAction": "Reject",
+  "ownerRequestApproved": "Approved owner request for {email}",
+  "@ownerRequestApproved": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "ownerRequestRejected": "Rejected owner request for {email}",
+  "@ownerRequestRejected": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "adminDeleteUserTitle": "Delete user data",
+  "adminDeleteUserMessage": "Delete all app data for {email}? Firebase Authentication user deletion still needs to be done separately.",
+  "@adminDeleteUserMessage": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "adminDeleteUserAction": "Delete user data",
+  "adminDeleteUserProtected": "Protected admin account",
+  "adminUserDeleted": "App data deleted for {email}.",
+  "@adminUserDeleted": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "adminSetAsOwner": "Set as owner",
+  "adminSetAsCustomer": "Set as customer",
+  "adminUserPromotedOwner": "{email} is now an owner.",
+  "@adminUserPromotedOwner": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "adminUserSetCustomer": "{email} is now a customer.",
+  "@adminUserSetCustomer": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "ownerDashboardTitle": "Owner Dashboard",
+  "ownerCentersTitle": "My Centers",
+  "ownerBookingsTitle": "Center Bookings",
+  "ownerCentersCount": "Owned centers",
+  "ownerBookingsCount": "Bookings",
+  "ownerRevenueTotal": "Revenue",
+  "ownerOccupiedSeats": "Occupied seats",
+  "ownerRecentBookings": "Recent bookings",
+  "ownerNoBookings": "No bookings for your centers yet.",
+  "ownerNoBookingsForFilter": "No bookings match this filter.",
+  "ownerClearBookingsTitle": "Clear canceled bookings",
+  "ownerClearBookingsMessage": "Clear canceled bookings for your centers?",
+  "ownerClearBookingsAction": "Clear canceled",
+  "ownerBookingsCleared": "Canceled bookings cleared.",
+  "ownerFilterAll": "All",
+  "ownerNoCenters": "You do not own any centers yet.",
+  "ownerAddCenter": "Add center",
+  "ownerEditCenter": "Edit center",
+  "ownerSaveCenter": "Save center",
+  "ownerDeleteCenterTitle": "Delete center",
+  "ownerDeleteCenterMessage": "Delete {center} completely? This will also remove its bookings and seat states.",
+  "@ownerDeleteCenterMessage": {
+    "placeholders": {
+      "center": {}
+    }
+  },
+  "ownerDeleteCenterAction": "Delete center",
+  "ownerCenterDeleted": "{center} deleted.",
+  "@ownerCenterDeleted": {
+    "placeholders": {
+      "center": {}
+    }
+  },
+  "ownerInvalidCenterData": "Please fill all center fields correctly.",
+  "ownerCenterAddress": "Center address",
+  "ownerCenterPcCount": "PC count",
+  "ownerCenterPcSpec": "PC spec",
+  "ownerCenterPrice": "Price per hour",
+  "ownerCenterLatitude": "Latitude",
+  "ownerCenterLongitude": "Longitude",
+  "ownerCenterProfileImageLabel": "Center profile image",
+  "ownerCenterAddProfileImage": "Add profile image",
+  "ownerCenterChangeProfileImage": "Change profile image",
+  "ownerCenterRemoveProfileImage": "Remove profile image",
+  "ownerCenterGalleryLabel": "Center gallery images",
+  "ownerCenterAddImages": "Add gallery images",
+  "ownerCenterRemoveSelectedImages": "Delete selected",
+  "ownerCenterImageSelectionHint": "Long press images to select one or many, then delete them.",
+  "ownerCenterImageFailed": "Failed to pick image.",
+  "ownerSeatManagerShort": "Seat manager",
+  "ownerSeatManagerHint": "Tap a seat to block or unblock it. Booked seats cannot be changed.",
+  "ownerSeatPreviewTimeLabel": "Booking check time",
+  "ownerSeatPreviewHint": "Red seats are booked during the selected hour.",
+  "ownerSeatBookingsAtTimeTitle": "Bookings at {time}",
+  "@ownerSeatBookingsAtTimeTitle": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "ownerSeatNoBookingsAtTime": "No bookings during this time.",
+  "ownerSeatAvailable": "Available",
+  "ownerSeatBlocked": "Blocked",
+  "ownerSeatBooked": "Booked",
+  "seatSelectedLabel": "Selected",
+  "seatUnavailableForTime": "Unavailable for time",
+  "ownerSeatManagerTitle": "Seat Manager - {center}",
+  "@ownerSeatManagerTitle": {
+    "placeholders": {
+      "center": {}
+    }
+  }
+}

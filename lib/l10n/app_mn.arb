@@ -1,0 +1,452 @@
+﻿{
+    "@@locale":  "mn",
+    "appTitle":  "E-Sport Төв",
+    "changeLanguage":  "Хэл солих",
+    "loginTitle":  "E-SPORT ТӨВ",
+    "username":  "Нэвтрэх нэр",
+    "email":  "И-мэйл",
+    "password":  "Нууц үг",
+    "confirmPassword":  "Нууц үг давтах",
+    "signIn":  "Нэвтрэх",
+    "signUp":  "Бүртгүүлэх",
+    "switchToSignUp":  "Бүртгэлгүй юу? Бүртгүүлэх",
+    "switchToSignIn":  "Бүртгэлтэй юу? Нэвтрэх",
+    "ownerSignUpOption":  "Эзэмшигч хүсэлттэй бүртгүүлэх",
+    "ownerSignUpHint":  "Энэ нь owner эрхийг шууд нээхгүй. Таны бүртгэл admin зөвшөөрөх хүртэл хүлээгдэж буй төлөвтэй үүснэ.",
+    "accountCreated":  "Бүртгэл амжилттай үүслээ.",
+    "usernameAlreadyExists":  "Энэ и-мэйл аль хэдийн бүртгэлтэй байна.",
+    "passwordsDoNotMatch":  "Нууц үг хоорондоо таарахгүй байна.",
+    "authInvalidEmail":  "И-мэйл буруу байна.",
+    "authEmailPasswordNotEnabled":  "Firebase дээр Email/Password нэвтрэх арга идэвхгүй байна.",
+    "authUserDisabled":  "Энэ бүртгэл идэвхгүй болсон байна.",
+    "authTooManyRequests":  "Хэт олон оролдлого хийлээ. Түр хүлээгээд дахин оролдоно уу.",
+    "authApiKeyInvalid":  "Firebase API key энэ апп дээр буруу байна.",
+    "authFirebaseNotInitialized":  "Firebase инициализаци буруу байна.",
+    "authWeakPassword":  "Нууц үг хэт сул байна.",
+    "authNetworkError":  "Сүлжээний алдаа. Интернэтээ шалгана уу.",
+    "authUnknownError":  "Нэвтрэх үйлдэл амжилтгүй боллоо. Дахин оролдоно уу.",
+    "login":  "Нэвтрэх",
+    "invalidCredentials":  "Нэвтрэх нэр эсвэл нууц үг буруу байна",
+    "centersTitle":  "E-SPORT ТӨВҮҮД",
+    "homeTab":  "Нүүр",
+    "searchCenterHint":  "Төв хайх...",
+    "noCentersFound":  "Төв олдсонгүй",
+    "mapTitle":  "Төвүүдийн газрын зураг",
+    "mapTab":  "Газрын зураг",
+    "bookingHistoryTitle":  "Захиалгын түүх",
+    "addressLabel":  "Хаяг: {address}",
+    "@addressLabel":  {
+                          "placeholders":  {
+                                               "address":  {
+
+                                                           }
+                                           }
+                      },
+    "pcCountLabel":  "PC тоо: {count}",
+    "@pcCountLabel":  {
+                          "placeholders":  {
+                                               "count":  {
+
+                                                         }
+                                           }
+                      },
+    "pcSpecLabel":  "PC үзүүлэлт: {spec}",
+    "@pcSpecLabel":  {
+                         "placeholders":  {
+                                              "spec":  {
+
+                                                       }
+                                          }
+                     },
+    "pricePerHourLabel":  "Үнэ: {price}₮ / цаг",
+    "@pricePerHourLabel":  {
+                               "placeholders":  {
+                                                    "price":  {
+
+                                                              }
+                                                }
+                           },
+    "phoneLabel":  "Утас: {phone}",
+    "@phoneLabel":  {
+                        "placeholders":  {
+                                             "phone":  {
+
+                                                       }
+                                         }
+                    },
+    "selectPcSeats":  "PC суудал сонгох",
+    "makeBooking":  "Захиалга хийх",
+    "selectSeatsTitle":  "Суудал сонгох - {center}",
+    "@selectSeatsTitle":  {
+                              "placeholders":  {
+                                                   "center":  {
+
+                                                              }
+                                               }
+                          },
+    "bookingTitle":  "Захиалга",
+    "fillAllFields":  "Бүх талбарыг бөглөнө үү.",
+    "selectAtLeastOneSeat":  "Дор хаяж нэг PC суудал сонгоно уу.",
+    "invalidPlayDuration":  "Тоглох хугацаа 1-ээс их тоо байх ёстой.",
+    "bookingConfirmed":  "Захиалга баталгаажлаа",
+    "bookingSummary":  "{center}\\nСуудал: {seats}\\nЦаг: {time}",
+    "@bookingSummary":  {
+                            "placeholders":  {
+                                                 "center":  {
+
+                                                            },
+                                                 "seats":  {
+
+                                                           },
+                                                 "time":  {
+
+                                                          }
+                                             }
+                        },
+    "bookingReceipt":  "{center}\\nСуудал: {seats}\\nЦаг: {hours}\\nЦагийн үнэ: {pricePerHour}₮\\nНийт: {totalPrice}₮",
+    "@bookingReceipt":  {
+                            "placeholders":  {
+                                                 "center":  {
+
+                                                            },
+                                                 "seats":  {
+
+                                                           },
+                                                 "hours":  {
+
+                                                           },
+                                                 "pricePerHour":  {
+
+                                                                  },
+                                                 "totalPrice":  {
+
+                                                                }
+                                             }
+                        },
+    "ok":  "Ойлголоо",
+    "noneSelected":  "Сонгогдоогүй",
+    "centerLabel":  "Төв: {center}",
+    "@centerLabel":  {
+                         "placeholders":  {
+                                              "center":  {
+
+                                                         }
+                                          }
+                     },
+    "selectedSeatsLabel":  "Сонгосон суудал: {seats}",
+    "@selectedSeatsLabel":  {
+                                "placeholders":  {
+                                                     "seats":  {
+
+                                                               }
+                                                  }
+                             },
+    "bookingStartTime":  "Эхлэх цаг",
+    "bookingTimeLabel":  "Цаг: {time}",
+    "@bookingTimeLabel":  {
+                             "placeholders":  {
+                                                  "time":  {
+
+                                                           }
+                                              }
+                         },
+    "name":  "Нэр",
+    "phone":  "Утас",
+    "phoneMustBe8Digits":  "Утасны дугаар 8 оронтой байх ёстой.",
+    "playDurationHours":  "Тоглох хугацаа (цаг)",
+    "invalidStartTime":  "Эхлэх цаг одооноос хойш байх ёстой.",
+    "confirmBooking":  "Захиалга батлах",
+    "totalPriceLabel":  "Нийт: {price}₮",
+    "@totalPriceLabel":  {
+                             "placeholders":  {
+                                                  "price":  {
+
+                                                            }
+                                              }
+                         },
+    "cancelBookingTitle":  "Захиалга цуцлах",
+    "cancelBookingQuestion":  "{center} төвийн захиалгыг цуцлах уу?",
+    "@cancelBookingQuestion":  {
+                                   "placeholders":  {
+                                                        "center":  {
+
+                                                                   }
+                                                    }
+                               },
+    "no":  "Үгүй",
+    "yesCancel":  "Тийм, цуцлах",
+    "bookingCanceled":  "Захиалга цуцлагдлаа.",
+    "bookingAlreadyCanceled":  "Энэ захиалга өмнө нь цуцлагдсан байна.",
+    "clearCanceledBookingsTitle":  "Цуцлагдсан захиалгууд цэвэрлэх",
+    "clearCanceledBookingsMessage":  "Түүхээсээ бүх цуцлагдсан захиалгыг устгах уу?",
+    "clearCanceledBookingsAction":  "Цуцлагдсаныг цэвэрлэх",
+    "canceledBookingsCleared":  "Цуцлагдсан захиалгууд цэвэрлэгдлээ.",
+    "noBookingHistory":  "Захиалгын түүх хоосон байна.",
+    "statusCanceled":  "Цуцлагдсан",
+    "statusActive":  "Идэвхтэй",
+    "customerLabel":  "Захиалагч: {name}",
+    "@customerLabel":  {
+                           "placeholders":  {
+                                                "name":  {
+
+                                                         }
+                                            }
+                       },
+    "durationLabel":  "Хугацаа: {hours} цаг",
+    "@durationLabel":  {
+                           "placeholders":  {
+                                                "hours":  {
+
+                                                          }
+                                            }
+                       },
+    "seatsLabel":  "Суудал: {seats}",
+    "@seatsLabel":  {
+                        "placeholders":  {
+                                             "seats":  {
+
+                                                       }
+                                         }
+                    },
+    "createdLabel":  "Үүсгэсэн: {date}",
+    "@createdLabel":  {
+                          "placeholders":  {
+                                               "date":  {
+
+                                                        }
+                                           }
+                      },
+    "canceledLabel":  "Цуцалсан: {date}",
+    "@canceledLabel":  {
+                           "placeholders":  {
+                                                "date":  {
+
+                                                         }
+                                            }
+                       },
+    "cancelBookingAction":  "Захиалга цуцлах",
+    "profileTitle":  "Профайл",
+    "profileNotSignedIn":  "Нэвтрээгүй байна",
+    "profileNoDisplayName":  "Харуулах нэр оноогоүй",
+    "profileUidLabel":  "UID: {uid}",
+    "@profileUidLabel":  {
+                             "placeholders":  {
+                                                  "uid":  {
+
+                                                          }
+                                              }
+                         },
+    "profileDisplayNameLabel":  "Харуулах нэр",
+    "profileSaveButton":  "Профайл хадгалах",
+    "profileUpdated":  "Профайл амжилттай шинэчлэгдлээ",
+    "profileUpdateFailed":  "Профайл шинэчлэхэд алдаа гарлаа",
+    "profileLastSignInLabel":  "Сүүлд нэвтэрсэн: {date}",
+    "@profileLastSignInLabel":  {
+                                    "placeholders":  {
+                                                         "date":  {
+
+                                                                  }
+                                                     }
+                                },
+    "logout":  "Гарах",
+    "profileAvatarUpload":  "Аватар оруулах",
+    "profileAvatarUpdated":  "Аватар амжилттай шинэчлэгдлээ",
+    "profileAvatarUpdateFailed":  "Аватар оруулахад алдаа гарлаа",
+    "profileAccountSection":  "Бүртгэл",
+    "profileEditSection":  "Профайл засах",
+    "profileActivitySection":  "Бүртгэлийн идэвх",
+    "profileSettingsTitle":  "Профайлын тохиргоо",
+    "profileRoleLabel":  "Төрөл",
+    "profileUidTitle":  "UID",
+    "profileCreatedAtLabel":  "Бүртгүүлсэн огноо",
+    "profileLastSignInTitle":  "Сүүлд нэвтэрсэн",
+    "profileCopyAction":  "Хуулах",
+    "profileEmailCopied":  "И-мэйл хуулагдлаа",
+    "profileUidCopied":  "UID хуулагдлаа",
+    "profileChangePassword":  "Нууц үг солих",
+    "profilePasswordResetSent":  "{email} хаяг руу нууц үг сэргээх мэйл илгээгдлээ",
+    "@profilePasswordResetSent":  {
+      "placeholders":  {
+        "email":  {
+
+        }
+      }
+    },
+    "profileEmailVerificationTitle":  "И-мэйл баталгаажуулалт",
+    "profileEmailVerified":  "Баталгаажсан",
+    "profileEmailNotVerified":  "Баталгаажаагүй",
+    "profileSendVerification":  "Баталгаажуулах мэйл илгээх",
+    "profileRefreshVerification":  "Сэргээх",
+    "profileVerificationSent":  "{email} хаяг руу баталгаажуулах мэйл илгээгдлээ",
+    "@profileVerificationSent":  {
+      "placeholders":  {
+        "email":  {
+
+        }
+      }
+    },
+    "ownerRoleCustomer":  "Хэрэглэгч",
+    "adminRoleLabel":  "Админ",
+    "ownerRolePending":  "Эзэмшигч хүлээгдэж буй",
+    "ownerRoleOwner":  "Эзэмшигч",
+    "ownerApplyTitle":  "Эзэмшигч болох хүсэлт",
+    "ownerApplyMessage":  "Эзэмшигч болох хүсэлт илгээх үү? Зөвшөөрөгдөх хүртэл owner эрх нээгдэхгүй.",
+    "ownerApplyAction":  "Эзэмшигч болох хүсэлт",
+    "ownerApplySubmitted":  "Эзэмшигчийн хүсэлт илгээгдлээ. Зөвшөөрөл хүлээнэ үү.",
+    "ownerApplicationFormTitle":  "Эзэмшигчийн хүсэлтийн маягт",
+    "ownerApplicationFormSubtitle":  "Төвийнхөө мэдээллийг бөглөж админд илгээнэ үү.",
+    "ownerApplicationCenterName":  "Төвийн нэр",
+    "ownerApplicationPhone":  "Холбоо барих утас",
+    "ownerApplicationAddress":  "Төвийн хаяг",
+    "ownerApplicationLink":  "Facebook хуудас эсвэл Google Maps холбоос",
+    "ownerApplicationNote":  "Нэмэлт тайлбар",
+    "ownerApplicationSubmit":  "Хүсэлт илгээх",
+    "ownerApplicationRequiredFields":  "Төвийн нэр, утас, хаягийг заавал бөглөнө үү.",
+    "ownerPendingTitle":  "Эзэмшигчийн хүсэлт хүлээгдэж байна",
+    "ownerPendingHeading":  "Таны эзэмшигчийн хүсэлт шалгагдаж байна",
+    "ownerPendingMessage":  "Таны хүсэлтийг хүлээн авлаа. Зөвшөөрөгдсөний дараа эзэмшигчийн эрх нээгдэнэ.",
+    "ownerPendingInline":  "Таны эзэмшигчийн хүсэлт илгээгдсэн бөгөөд зөвшөөрөл хүлээж байна.",
+    "adminDashboardTitle":  "Админы хянах самбар",
+    "adminCentersTitle":  "Бүх төвүүд",
+    "adminUsersTitle":  "Хэрэглэгчид",
+    "adminUsersEmpty":  "Хэрэглэгч олдсонгүй.",
+    "adminPendingRequests":  "Хүлээгдэж буй хүсэлтүүд",
+    "adminOwnersCount":  "Эзэмшигчид",
+    "adminCustomersCount":  "Хэрэглэгчид",
+    "adminAdminsCount":  "Админууд",
+    "adminCentersCount":  "Төвүүд",
+    "adminBookingsCount":  "Захиалгууд",
+    "adminRevenueTotal":  "Нийт орлого",
+    "ownerRequestsTitle":  "Эзэмшигчийн хүсэлтүүд",
+    "ownerRequestsEmpty":  "Хүлээгдэж буй эзэмшигчийн хүсэлт алга.",
+    "ownerApproveAction":  "Зөвшөөрөх",
+    "ownerRejectAction":  "Татгалзах",
+    "ownerRequestApproved":  "{email} хаягийн owner хүсэлтийг зөвшөөрлөө",
+    "@ownerRequestApproved":  {
+      "placeholders":  {
+        "email":  {
+
+        }
+      }
+    },
+    "ownerRequestRejected":  "{email} хаягийн owner хүсэлтийг татгалзлаа",
+    "@ownerRequestRejected":  {
+      "placeholders":  {
+        "email":  {
+
+        }
+      }
+    },
+    "adminDeleteUserTitle":  "Хэрэглэгчийн өгөгдөл устгах",
+    "adminDeleteUserMessage":  "{email} хаягийн app доторх бүх өгөгдлийг устгах уу? Firebase Authentication дээрх хэрэглэгчийг тусад нь устгана.",
+    "@adminDeleteUserMessage":  {
+      "placeholders":  {
+        "email":  {
+
+        }
+      }
+    },
+    "adminDeleteUserAction":  "Өгөгдөл устгах",
+    "adminDeleteUserProtected":  "Хамгаалагдсан админ бүртгэл",
+    "adminUserDeleted":  "{email} хаягийн app өгөгдөл устлаа.",
+    "@adminUserDeleted":  {
+      "placeholders":  {
+        "email":  {
+
+        }
+      }
+    },
+    "adminSetAsOwner": "Эзэмшигч болгох",
+    "adminSetAsCustomer": "Хэрэглэгч болгох",
+    "adminUserPromotedOwner": "{email} хаягийг эзэмшигч болголоо.",
+    "@adminUserPromotedOwner": {
+      "placeholders": {
+        "email": {}
+      }
+    },
+    "adminUserSetCustomer": "{email} хаягийг хэрэглэгч болголоо.",
+    "@adminUserSetCustomer": {
+      "placeholders": {
+        "email": {}
+      }
+    },
+    "ownerDashboardTitle":  "Эзэмшигчийн хянах самбар",
+    "ownerCentersTitle":  "Миний төвүүд",
+    "ownerBookingsTitle":  "Төвийн захиалгууд",
+    "ownerCentersCount":  "Эзэмшдэг төвүүд",
+    "ownerBookingsCount":  "Захиалгын тоо",
+    "ownerRevenueTotal":  "Нийт орлого",
+    "ownerOccupiedSeats":  "Дүүрсэн суудал",
+    "ownerRecentBookings":  "Сүүлийн захиалгууд",
+    "ownerNoBookings":  "Таны төвүүд дээр одоогоор захиалга алга.",
+    "ownerNoBookingsForFilter":  "Энэ шүүлтүүрт тохирох захиалга алга.",
+    "ownerClearBookingsTitle":  "Цуцлагдсан захиалгууд цэвэрлэх",
+    "ownerClearBookingsMessage":  "Өөрийн төвүүдийн цуцлагдсан захиалгуудыг цэвэрлэх үү?",
+    "ownerClearBookingsAction":  "Цуцлагдсаныг цэвэрлэх",
+    "ownerBookingsCleared":  "Цуцлагдсан захиалгууд цэвэрлэгдлээ.",
+    "ownerFilterAll":  "Бүгд",
+    "ownerNoCenters":  "Та одоогоор төв эзэмшдэггүй байна.",
+    "ownerAddCenter":  "Төв нэмэх",
+    "ownerEditCenter":  "Төв засах",
+    "ownerSaveCenter":  "Төв хадгалах",
+    "ownerDeleteCenterTitle":  "Төв устгах",
+    "ownerDeleteCenterMessage":  "{center} төвийг бүр мөсөн устгах уу? Үүнтэй холбоотой захиалга болон суудлын төлөвүүд бас устна.",
+    "@ownerDeleteCenterMessage":  {
+      "placeholders":  {
+        "center":  {
+
+        }
+      }
+    },
+    "ownerDeleteCenterAction":  "Төв устгах",
+    "ownerCenterDeleted":  "{center} төв устлаа.",
+    "@ownerCenterDeleted":  {
+      "placeholders":  {
+        "center":  {
+
+        }
+      }
+    },
+    "ownerInvalidCenterData":  "Төвийн мэдээллээ зөв бөглөнө үү.",
+    "ownerCenterAddress":  "Төвийн хаяг",
+    "ownerCenterPcCount":  "PC тоо",
+    "ownerCenterPcSpec":  "PC үзүүлэлт",
+    "ownerCenterPrice":  "Цагийн үнэ",
+    "ownerCenterLatitude":  "Өргөрөг",
+    "ownerCenterLongitude":  "Уртраг",
+    "ownerCenterProfileImageLabel":  "Төвийн profile зураг",
+    "ownerCenterAddProfileImage":  "Profile зураг нэмэх",
+    "ownerCenterChangeProfileImage":  "Profile зураг солих",
+    "ownerCenterRemoveProfileImage":  "Profile зураг устгах",
+    "ownerCenterGalleryLabel":  "Төвийн мэдээллийн зургууд",
+    "ownerCenterAddImages":  "Мэдээллийн зураг нэмэх",
+    "ownerCenterRemoveSelectedImages":  "Сонгосныг устгах",
+    "ownerCenterImageSelectionHint":  "Зурган дээр удаан дарж нэг эсвэл олныг сонгоод устгаж болно.",
+    "ownerCenterImageFailed":  "Зураг сонгоход алдаа гарлаа.",
+    "ownerSeatManagerShort":  "Суудал",
+    "ownerSeatManagerHint":  "Суудал дээр дарж хаах эсвэл нээж болно. Захиалгатай суудлыг өөрчлөхгүй.",
+    "ownerSeatPreviewTimeLabel":  "Захиалга шалгах цаг",
+    "ownerSeatPreviewHint":  "Сонгосон 1 цагийн дотор захиалгатай суудал улаанаар харагдана.",
+    "ownerSeatBookingsAtTimeTitle":  "{time} цагийн захиалгууд",
+    "@ownerSeatBookingsAtTimeTitle":  {
+      "placeholders":  {
+        "time":  {
+
+        }
+      }
+    },
+    "ownerSeatNoBookingsAtTime":  "Энэ цагт захиалга алга.",
+    "ownerSeatAvailable":  "Нээлттэй",
+    "ownerSeatBlocked":  "Хаалттай",
+    "ownerSeatBooked":  "Захиалгатай",
+    "seatSelectedLabel":  "Сонгосон",
+    "seatUnavailableForTime":  "Энэ цагт завгүй",
+    "ownerSeatManagerTitle":  "Суудлын удирдлага - {center}",
+    "@ownerSeatManagerTitle":  {
+      "placeholders":  {
+        "center":  {
+
+        }
+      }
+    }
+}
