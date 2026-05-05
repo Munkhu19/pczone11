@@ -28,7 +28,9 @@ String readableBookingDocumentId({
 }
 
 String _slugify(String value) {
-  final normalized = value.trim().toLowerCase();
+  final normalized = value.trim().toLowerCase().split('').map((char) {
+    return _cyrillicToLatin[char] ?? char;
+  }).join();
   final slug = normalized
       .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
       .replaceAll(RegExp(r'-+'), '-')
@@ -37,3 +39,41 @@ String _slugify(String value) {
   if (slug.length <= 48) return slug;
   return slug.substring(0, 48).replaceAll(RegExp(r'-$'), '');
 }
+
+const _cyrillicToLatin = <String, String>{
+  'а': 'a',
+  'б': 'b',
+  'в': 'v',
+  'г': 'g',
+  'д': 'd',
+  'е': 'e',
+  'ё': 'yo',
+  'ж': 'j',
+  'з': 'z',
+  'и': 'i',
+  'й': 'i',
+  'к': 'k',
+  'л': 'l',
+  'м': 'm',
+  'н': 'n',
+  'о': 'o',
+  'ө': 'u',
+  'п': 'p',
+  'р': 'r',
+  'с': 's',
+  'т': 't',
+  'у': 'u',
+  'ү': 'u',
+  'ф': 'f',
+  'х': 'h',
+  'ц': 'ts',
+  'ч': 'ch',
+  'ш': 'sh',
+  'щ': 'sh',
+  'ъ': '',
+  'ы': 'i',
+  'ь': '',
+  'э': 'e',
+  'ю': 'yu',
+  'я': 'ya',
+};

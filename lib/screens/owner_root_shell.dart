@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../widgets/floating_navigation_body.dart';
 import 'owner_bookings_screen.dart';
 import 'owner_centers_screen.dart';
 import 'owner_dashboard_screen.dart';
@@ -31,7 +32,7 @@ class _OwnerRootShellState extends State<OwnerRootShell> {
       extendBody: true,
       body: IndexedStack(
         index: _currentIndex,
-        children: _tabs,
+        children: [for (final tab in _tabs) FloatingNavigationBody(child: tab)],
       ),
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
@@ -39,8 +40,7 @@ class _OwnerRootShellState extends State<OwnerRootShell> {
           borderRadius: BorderRadius.circular(28),
           child: NavigationBar(
             selectedIndex: _currentIndex,
-            labelBehavior:
-                NavigationDestinationLabelBehavior.onlyShowSelected,
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             destinations: [
               NavigationDestination(
                 icon: const Icon(Icons.dashboard_outlined),

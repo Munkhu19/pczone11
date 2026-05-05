@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../widgets/floating_navigation_body.dart';
 import 'booking_history_screen.dart';
 import 'home_screen.dart';
 import 'map_screen.dart';
@@ -56,7 +57,10 @@ class _RootShellState extends State<RootShell> {
       extendBody: true,
       body: IndexedStack(
         index: _currentIndex,
-        children: _tabs,
+        children: [
+          for (var i = 0; i < _tabs.length; i++)
+            FloatingNavigationBody(reserveBottomSpace: i != 1, child: _tabs[i]),
+        ],
       ),
       bottomNavigationBar: SafeArea(
         minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
@@ -64,8 +68,7 @@ class _RootShellState extends State<RootShell> {
           borderRadius: BorderRadius.circular(28),
           child: NavigationBar(
             selectedIndex: _currentIndex,
-            labelBehavior:
-                NavigationDestinationLabelBehavior.onlyShowSelected,
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             destinations: [
               NavigationDestination(
                 icon: const Icon(Icons.home_outlined),
